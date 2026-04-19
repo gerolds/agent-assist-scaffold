@@ -34,6 +34,22 @@ Every thread has a `## Progress Log` (reverse-chronological) and a `progress: "N
 field. Update both whenever you touch a thread. The registry mirrors the frontmatter field so
 humans can scan progress at a glance without opening each thread.
 
+## Thread Hygiene
+
+Enforced by `.github/scripts/thread-hygiene.py` and the `thread-hygiene` subagent.
+
+- **Stale** — active/blocked thread not updated in 14+ days → status set to `stale`.
+- **Abandoned** — stale/good-enough thread not updated in 28+ days → status set to `closed`.
+- **Budget** — max ~10 active threads. Over budget is flagged for human triage, not auto-closed.
+- **Closed ≠ deleted.** Closed threads move to the Closed section of the registry. They remain
+  searchable. Reopen by moving back to Active and updating status.
+
+Run periodically or before creating new threads:
+
+```sh
+python3 .github/scripts/thread-hygiene.py --root .
+```
+
 ## ADR Headers
 
 For substantive changes to a file, keep a tiny ADR header above usings.
