@@ -28,12 +28,17 @@ The agent reads only what the current task requires (via a specs index in `custo
 ```
 .github/
   custom-instructions.md        ← Root prompt (created during migration, see below)
-  agents/                       ← Agent role definitions
+  agents/                       ← Active agents (Copilot scans this folder)
     custom-instructions.md      ← Pre-migration home (moved to parent after migration)
-    big-picture.agent.md        ← Vision / product-level reasoning
+    big-picture.agent.md        ← Vision / coherence auditor
     maintainer.agent.md         ← Coordination file upkeep
     gather-context.agent.md     ← Deep-read research subagent
-    ...
+    migration-*.agent.md        ← Migration subagents (4 files, one per phase)
+  library/                      ← Inactive agents — copy into agents/ to activate
+    critics/                    ← Opinionated domain reviewers
+      colony-systems-critic.agent.md
+      lantern-reviewer.agent.md
+      ...
   specs/                        ← Project-level specs (navigable, ≤200 lines each)
     project-facts.md            ← Stack, scenes, domain
     first-principles.md         ← Design philosophy
@@ -74,6 +79,20 @@ Planning discussions live in `.plans~/` folders as markdown files with YAML fron
 ### Health Checks
 
 `health-check.prompt.md` is a periodic audit that surfaces ambiguity, drift, churn, and fragmentation — the main failure modes of long-running projects. It writes to `PLANS~/health-check.md`.
+
+### Agent Library
+
+Copilot only activates agents inside `.github/agents/`. The scaffold ships additional agents in `.github/library/` — they're inert until you copy them in. This keeps the active set minimal while providing a catalog of ready-made reviewers and critics.
+
+```sh
+# Activate a critic
+cp .github/library/critics/colony-systems-critic.agent.md .github/agents/
+
+# Deactivate — just remove from agents/
+rm .github/agents/colony-systems-critic.agent.md
+```
+
+The library ships domain-specific critics (colony-sim design, implementation review). Write your own following the same pattern — any `.agent.md` file copied into `agents/` becomes available.
 
 ## How to Use This Template
 
